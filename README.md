@@ -89,7 +89,7 @@ before you paste it anywhere public.
 ## Built for
 
 The [DEV Hacktoberfest 2026 Open-Source AI Challenge](https://dev.to/challenges/hacktoberfest-week4-2026-10-26), Week 4, "Ghost in the Machine",
-October 26 to November 1, 2026. Any commits after the deadline will be listed here.
+October 26–31, 2026. Any commits after the deadline will be listed here.
 
 ## License
 
