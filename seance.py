@@ -97,15 +97,15 @@ def ghosts(repo):
     history = blob_history(repo)
     living = {}  # path -> names at HEAD, and every function hash at HEAD
     alive_hashes = set()
-    for path in git(repo, "ls-files").decode().splitlines():
-        if supported(path) and os.path.exists(os.path.join(repo, path)):
+    for path in git(repo, "ls-tree", "-r", "--name-only", "HEAD").decode().splitlines():
+        if supported(path):
             fns = list(functions_in(git(repo, "show", f"HEAD:{path}"), LANGS[os.path.splitext(path)[1]]))
             living[path] = {f["name"] for f in fns}
             alive_hashes |= {f["hash"] for f in fns}
     alive_names = {(os.path.basename(p), n) for p, names in living.items() for n in names}
 
     blobs = read_blobs(repo, sorted({b for _, b in history}))
-    last = {}  # (path, name) -> latest version
+    last, born = {}, {}  # (path, name) -> latest version, earliest birth of any version
     for (path, blob), when in history.items():
         if "born" not in when:  # born on a branch `--all` never reached
             continue
@@ -113,6 +113,8 @@ def ghosts(repo):
             fns = functions_in(blobs[blob], LANGS[os.path.splitext(path)[1]])
             for f in fns:
                 key = (path, f["name"])
+                if key not in born or when["born"]["time"] < born[key]["time"]:
+                    born[key] = when["born"]
                 end = when.get("died", {"time": float("inf")})["time"]
                 if key not in last or end > last[key]["_end"]:
                     last[key] = {**f, "file": path, "born": when["born"], "died": when.get("died"), "_end": end}
@@ -126,6 +128,7 @@ def ghosts(repo):
                 or f["hash"] in alive_hashes or f["died"] is None:
             continue
         f.pop("_end")
+        f["born"] = born[(path, name)]
         out.append(f)
     return out
 
@@ -136,7 +139,11 @@ def index(repos):
     for repo in repos:
         repo = os.path.abspath(os.path.expanduser(repo))
         t = time.time()
-        found = ghosts(repo)
+        try:
+            found = ghosts(repo)
+        except subprocess.CalledProcessError as e:  # not a git repo, or no commits yet
+            print(f"{os.path.basename(repo)}: skipped ({e.stderr.decode().strip()[:80]})")
+            continue
         for f in found:
             f["repo"] = repo
         print(f"{os.path.basename(repo)}: {len(found)} ghosts ({time.time() - t:.0f} s)")

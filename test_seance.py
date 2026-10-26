@@ -51,6 +51,7 @@ with tempfile.TemporaryDirectory() as repo:
     found = {g["name"]: g for g in seance.ghosts(repo)}
     assert set(found) == {"retry_with_backoff"}, found.keys()
     assert found["retry_with_backoff"]["died"]["msg"].startswith("drop retry")
+    assert found["retry_with_backoff"]["born"]["msg"] == "add helpers"
     seance.index([repo])
     meta, doc = seance.load()
     q = seance.embed_here(["call a function again and again, waiting longer each time"], seance.QUERY_PREFIX)[0]

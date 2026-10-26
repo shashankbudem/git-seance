@@ -10,9 +10,9 @@ branch, finds the functions that no longer exist at HEAD, and lets you search th
 ```
 $ seance summon "paste images from the clipboard" -k 2
    17  0.82  imageFilesFromClipboard      arivu-agent/desktop/renderer/src/App.tsx
-             born 2026-07-03, died 2026-07-03 in f2e18500 "Add drag-and-drop image attachments"
+             born 2026-06-21, died 2026-07-03 in f2e18500 "Add drag-and-drop image attachments"
    15  0.69  pullRequestCheckLogCommand   arivu-agent/src/agent/taskWorktree.ts
-             born 2026-07-05, died 2026-07-05 in 39d376bc "Broaden PR check evidence capture"
+             born 2026-07-04, died 2026-07-05 in 39d376bc "Broaden PR check evidence capture"
 
 $ seance raise 17
 // imageFilesFromClipboard from desktop/renderer/src/App.tsx, last seen in f2e18500^ (git -C ~/Documents/arivu-agent show f2e18500^:desktop/renderer/src/App.tsx)
@@ -42,7 +42,9 @@ seance raise 42 --to retry.ts                 # or write it to a new file (never
 
 Git Séance never touches your repos: it only reads `git log` and blobs. Searches reuse a running
 [`dejavu serve`](https://github.com/shashankbudem/code-dejavu) if there is one (same model, same settings), so a
-summon takes a fraction of a second instead of the ~13 s it takes to load the model.
+summon takes about 0.1 to 0.3 s instead of the ~13 s it takes to load the model.
+
+Each `seance index` replaces the previous index, so list every repo you want searched.
 
 ## Who counts as a ghost
 
@@ -67,8 +69,8 @@ The function extractor and model settings come from my earlier project,
 
 ## How well does it work?
 
-I described 18 real deleted functions from four repos, reading each one before describing it, and checked where the
-right one ranked among 229 unique ghosts ([`eval/summon_eval.py`](eval/summon_eval.py),
+My coding agent described 18 real deleted functions from four repos (three of mine, one open-source project), reading
+each one before describing it. They came from a random sample, with trivial ones dropped and a few more picked by name. I checked where the right one ranked among 229 unique ghosts ([`eval/summon_eval.py`](eval/summon_eval.py),
 [`eval/summon_report.txt`](eval/summon_report.txt)):
 
 | | right function first | in the top 5 |
