@@ -89,7 +89,7 @@ before you paste it anywhere public.
 ## Built for
 
 The [DEV Hacktoberfest 2026 Open-Source AI Challenge](https://dev.to/challenges/hacktoberfest-week4-2026-10-26), Week 4, "Ghost in the Machine",
-October 26–31, 2026. Any commits after the deadline will be listed here.
+October 26–31, 2026. Write-up: [Git Séance: calling deleted code back from the dead](https://dev.to/shashank_budem_83f714ee61/git-seance-calling-deleted-code-back-from-the-dead-2g5h). Any commits after the deadline will be listed here.
 
 ## License
 
